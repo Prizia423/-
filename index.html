@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>시재 마감 계산기</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Malgun Gothic', sans-serif;
+    }
+    body {
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: #ffffff;
+      width: 100%;
+      max-width: 880px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+    }
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 24px;
+      color: #1f2937;
+    }
+    .subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 32px;
+    }
+    .denom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .denom-row:last-child {
+      border-bottom: none;
+    }
+    .denom-label {
+      font-weight: 600;
+      font-size: 16px;
+      color: #374151;
+      width: 85px;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-minus, .btn-plus {
+      width: 34px;
+      height: 36px;
+      font-size: 18px;
+      font-weight: 700;
+      background-color: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-minus:hover, .btn-plus:hover {
+      background-color: #e2e8f0;
+    }
+    input[type="number"] {
+      width: 75px;
+      height: 36px;
+      padding: 6px 8px;
+      font-size: 16px;
+      text-align: right;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      outline: none;
+    }
+    input[type="number"]:focus {
+      border-color: #2563eb;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .unit-text {
+      font-size: 14px;
+      color: #6b7280;
+      margin-left: 2px;
+    }
+    .subtotal {
+      font-weight: 600;
+      color: #111827;
+      width: 120px;
+      text-align: right;
+      font-size: 15px;
+    }
+    .summary-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .summary-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 16px;
+    }
+    .total-display {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: right;
+      margin-bottom: 20px;
+    }
+    .total-label {
+      font-size: 14px;
+      color: #1e40af;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-align: left;
+    }
+    .total-amount {
+      font-size: 32px;
+      font-weight: 800;
+      color: #1d4ed8;
+    }
+    .detail-list {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.8;
+      margin-bottom: 24px;
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .btn-reset {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #e5e7eb;
+      color: #374151;
+    }
+    .btn-reset:hover {
+      background-color: #d1d5db;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>시재 마감 계산기</h1>
+
+  <div class="grid-layout">
+    <div id="input-section">
+      <div class="denom-row">
+        <span class="denom-label">50,000원</span>
+        <div class="input-group">
+          <input type="number" class="qty-input" data-value="50000" data-name="5만원권" min="0" placeholder="0">
+	  <button type="button" class="btn-minus">-</button>
+          <button type="button" class="btn-plus">+</button>
+          <span class="unit-text">매</span>
+        </div>
+        <span class="subtotal">0원</span>
+      </div>
+
+      <div class="denom-row">
+        <span class="denom-label">10,000원</span>
+        <div class="input-group">
+          <input type="number" class="qty-input" data-value="10000" data-name="1만원권" min="0" placeholder="0">
+	  <button type="button" class="btn-minus">-</button>
+          <button type="button" class="btn-plus">+</button>
+          <span class="unit-text">매</span>
+        </div>
+        <span class="subtotal">0원</span>
+      </div>
+
+      <div class="denom-row">
+        <span class="denom-label">5,000원</span>
+        <div class="input-group">
+        <input type="number" class="qty-input" data-value="5000" data-name="오천원권" min="0" placeholder="0">
+        <button type="button" class="btn-minus">-</button>  
+	<button type="button" class="btn-plus">+</button>
+          <span class="unit-text">매</span>
+        </div>
+        <span class="subtotal">0원</span>
+      </div>
+
+      <div class="denom-row">
+        <span class="denom-label">1,000원</span>
+        <div class="input-group">
+          <input type="number" class="qty-input" data-value="1000" data-name="천원권" min="0" placeholder="0">
+          <button type="button" class="btn-minus">-</button>
+          <button type="button" class="btn-plus">+</button>
+          <span class="unit-text">매</span>
+        </div>
+        <span class="subtotal">0원</span>
+      </div>
+
+      <div class="denom-row">
+        <span class="denom-label">500원</span>
+        <div class="input-group">
+          <input type="number" class="qty-input" data-value="500" data-name="오백원" min="0" placeholder="0">
+          <button type="button" class="btn-minus">-</button>
+          <button type="button" class="btn-plus">+</button>
+          <span class="unit-text">개</span>
+        </div>
+        <span class="subtotal">0원</span>
+      </div>
+
+      <div class="denom-row">
+        <span class="denom-label">100원</span>
+        <div class="input-group">
+          <input type="number" class="qty-input" data-value="100" data-name="백원" min="0" placeholder="0">
+          <button type="button" class="btn-minus">-</button>
+          <button type="button" class="btn-plus">+</button>
+          <span class="unit-text">개</span>
+        </div>
+        <span class="subtotal">0원</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <div>
+        <div class="summary-title">마감 정산 내역</div>
+        <div class="total-display">
+          <div class="total-label">시재 합계 (총액)</div>
+          <div class="total-amount" id="total-sum">0원</div>
+        </div>
+        <div class="detail-list" id="summary-text">
+          입력된 내역이 없습니다.
+        </div>
+      </div>
+
+      <button type="button" class="btn-reset" id="btn-reset">초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var rows = document.querySelectorAll('.denom-row');
+    var inputs = document.querySelectorAll('.qty-input');
+    var totalDisplay = document.getElementById('total-sum');
+    var summaryText = document.getElementById('summary-text');
+
+    function updateAll() {
+      var total = 0;
+      var lines = [];
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var input = row.querySelector('.qty-input');
+        var subtotalEl = row.querySelector('.subtotal');
+        var unit = Number(input.getAttribute('data-value'));
+        var name = input.getAttribute('data-name');
+        var qty = parseInt(input.value, 10) || 0;
+
+        if (qty < 0) {
+          qty = 0;
+          input.value = '';
+        }
+
+        var sub = unit * qty;
+        subtotalEl.textContent = sub.toLocaleString() + '원';
+        total += sub;
+
+        if (qty > 0) {
+          lines.push(name + ': ' + qty + '개 (' + sub.toLocaleString() + '원)');
+        }
+      }
+
+      totalDisplay.textContent = total.toLocaleString() + '원';
+      summaryText.innerHTML = lines.length > 0 ? lines.join('<br>') : '입력된 내역이 없습니다.';
+    }
+
+    for (var i = 0; i < rows.length; i++) {
+      (function(index) {
+        var row = rows[index];
+        var input = row.querySelector('.qty-input');
+        var minusBtn = row.querySelector('.btn-minus');
+        var plusBtn = row.querySelector('.btn-plus');
+
+        minusBtn.addEventListener('click', function() {
+          var current = parseInt(input.value, 10) || 0;
+          var next = current > 0 ? current - 1 : 0;
+          input.value = next === 0 ? '' : next;
+          updateAll();
+        });
+
+        plusBtn.addEventListener('click', function() {
+          var current = parseInt(input.value, 10) || 0;
+          input.value = current + 1;
+          updateAll();
+        });
+
+        input.addEventListener('input', updateAll);
+
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            var nextRow = row.nextElementSibling;
+            if (nextRow) {
+              var nextInput = nextRow.querySelector('.qty-input');
+              if (nextInput) {
+                nextInput.focus();
+                nextInput.select();
+              }
+            }
+          }
+        });
+      })(i);
+    }
+
+    document.getElementById('btn-reset').addEventListener('click', function() {
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].value = '';
+      }
+      updateAll();
+      var firstInput = document.querySelector('.qty-input');
+      if (firstInput) {
+        firstInput.focus();
+      }
+    });
+
+    var firstInput = document.querySelector('.qty-input');
+    if (firstInput) {
+      firstInput.focus();
+    }
+  });
+</script>
+
+</body>
+</html>
